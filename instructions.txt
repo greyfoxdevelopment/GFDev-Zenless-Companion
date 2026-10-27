@@ -1,0 +1,117 @@
+ZENLESS COMPANION - INSTRUCTIONS
+================================
+
+INSTALL
+-------
+
+Download ZenlessCompanionSetup.exe from the latest project release:
+  https://github.com/greyfoxdevelopment/GFDev-Zenless-Companion/releases/latest
+
+Run the installer, review and accept the included MIT License, choose an
+installation folder, and select Install. The installer downloads the latest
+ZenlessCompanion.exe and its SHA-256 checksum from GitHub and verifies the
+download before installing it.
+
+The installer is a self-contained Windows x64 program. Embedded pages require
+the Microsoft Edge WebView2 Runtime, which is present on most Windows PCs.
+
+FIRST-TIME SIGNAL SEARCH SYNC
+-----------------------------
+
+1. Launch Zenless Zone Zero.
+2. Open Signal Search > View Details in-game and wait for the history page to load.
+3. Open Zenless Companion and select Sync Signal Searches.
+4. If the game cache is not found, select the game installation folder
+   containing ZenlessZoneZero_Data (or ZenlessZoneZero.exe).
+
+Signal Search-history links expire. If sync reports an expired link, open
+Signal Search > View Details in-game again and retry. The app reads the local
+cache without modifying it or interacting with the game process.
+
+USING THE APP
+-------------
+
+Signal Searches
+  View pity and 4-star/S-rank counts for Character Event, W-Engine Channel,
+  and Stable Channel. Sync periodically because the game-history API only
+  returns a limited recent window; successfully synced history is saved locally.
+
+Polychrome Planner
+  Enter Polychromes, Encrypted Master Tapes, character-channel pity, and
+  featured guarantee state. The planner estimates the chance of a featured
+  S-Rank and the worst-case number of searches needed. It is an estimate, not
+  a guarantee of an in-game result. Pity and featured guarantee can be filled
+  from saved Character Event history.
+
+HoYoLAB tools
+  Sign in to HoYoLAB in the embedded page and use the account tools available
+  in the app. Cookies and the browser profile remain local to this Windows
+  account.
+
+Official pages and support
+  Browse official Zenless Zone Zero news. The Support tab contains project
+  support information and the Ko-fi widget.
+
+DATA AND PRIVACY
+----------------
+
+Signal Search history, settings, and diagnostics are stored locally:
+  %LOCALAPPDATA%\ZenlessCompanion\signal_search_history.json
+  %LOCALAPPDATA%\ZenlessCompanion\settings.json
+  %LOCALAPPDATA%\ZenlessCompanion\sync_log.txt
+
+WebView2 stores the embedded browser profile under:
+  %LOCALAPPDATA%\ZenlessCompanion\WebView2
+
+The app reads the game's local web cache to find a Signal Search-history link.
+The link is held in memory while syncing and is not written to history,
+settings, or diagnostics. Treat it as private while it is valid. Deleting the
+ZenlessCompanion directory removes local app data.
+
+TROUBLESHOOTING
+---------------
+
+Game cache not found
+  Select the game folder containing ZenlessZoneZero_Data with the folder
+  button. Open Signal Search > View Details in-game before trying again.
+
+No Signal Search link found
+  Make sure the Signal Search history page has fully loaded in-game, then sync
+  again. The sync diagnostics file records paths, counts, and API result codes,
+  not authorization links or keys.
+
+Signal Search link expired
+  Reopen Signal Search > View Details in-game and retry. The app can also offer
+  a manual PowerShell-assisted cache scan if automatic sync fails.
+
+App update fails
+  Check your internet connection and retry. Confirmed updates require matching
+  ZenlessCompanion.exe and ZenlessCompanion.exe.sha256 assets on the relevant
+  GitHub Release.
+
+DEVELOPMENT AND RELEASES
+------------------------
+
+Requirements
+  Windows 10 or 11 x64 and the .NET 8 SDK.
+
+Run from source
+  Run Scripts\build.bat, or use:
+  dotnet run --project src\ZenlessCompanion.csproj -c Release
+
+Build the installer
+  dotnet publish Setup\ZenlessCompanionSetup.csproj -c Release -r win-x64 --self-contained true
+
+Publish a release
+  Set the Version in src\ZenlessCompanion.csproj and
+  Setup\ZenlessCompanionSetup.csproj, then push a matching tag (without a v
+  prefix), for example:
+    git tag 1.0.0
+    git push origin 1.0.0
+  The release workflow builds the app and installer, computes the app
+  executable's SHA-256 checksum, and attaches all three assets to the release.
+
+The setup project downloads the latest release's app executable and checksum,
+verifies the checksum, and installs the app. The checksum detects corruption
+or mismatch; it is not an independent signature against compromise of the
+GitHub release account.
